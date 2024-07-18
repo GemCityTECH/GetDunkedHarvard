@@ -1,15 +1,12 @@
-import urllib.parse
-import urllib.request
-import json
+import requests
 import time
+import json
 
 #Change the directory HERE for the input file
 #(!!! must be a tab-delimited text file without headers, and only has 5 fields: ID, origin X, origin Y, destination X, and destination Y)
 inputfile = r"./test_input.txt"
 #Change the directory HERE for the output file
 outputfile = r"./output_file.txt"
-#sample input syntax that works
-#https://maps.googleapis.com/maps/api/distancematrix/json?origins=-27.149887%2C-51.746696&destinations=-27.131781%2C-51.464321&key=AIzaSyBlCbsavDJZc61KcTGAgw3tzBhNdlzWm4o 
 
 ## Pull config
 with open('config.json') as f:
@@ -18,12 +15,7 @@ with open('config.json') as f:
 # Load the configuration from 'config.json' and access the API key
 api_key = config['g_api_key']
 
-google_url = "https://maps.googleapis.com"
-distance_endpoint = "/maps/api/distancematrix/json?"
-#API key from Google Maps API Premium
-#enter your API Key between the quotes on the line below
-#specifies the mode of transport to use when calculating directions. Valid values are: driving, walking, transit, or bicycling
-mode = "driving"
+gdm_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 
 field1 = "ID"
 field2 = "origin_x"
@@ -44,12 +36,14 @@ for line in f_in_line:
    origin = "%s,%s" % (fields[1], fields[2])
    destination = "%s,%s" % (fields[3], fields[4])
    #Generate valid signature
-   encodedParams = urllib.parse.urlencode({"origins":origin,"destinations":destination,"mode":mode,"sensor":"false","key":Key});
-   #encodedParams = urllib.urlencode("origins=%s&destinations=%s&mode=%s&client=%s") % (origin, destination, mode, client)
-   #decode the private key into its binary format
-   url = google_url + distance_endpoint + encodedParams
-   result = urllib.request.urlopen(url)
-   result_json = json.loads(result.read())
+   query_params = {
+      "origins": origin,
+      "destinations": destination,
+      "mode": "driving",
+      "units": "imperial",
+      "key": api_key
+   }
+   result_json = requests.get(gdm_url, params=query_params).json()
    print(result_json)
    check_status = result_json["rows"][0]["elements"][0]["status"]
    print ("Processing ID: " + fields[0])
