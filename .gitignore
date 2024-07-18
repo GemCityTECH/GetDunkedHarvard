@@ -163,3 +163,5 @@ cython_debug/
 
 # Harvard script default output file name
 output_file.txt
+
+config.json

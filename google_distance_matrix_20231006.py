@@ -1,5 +1,6 @@
 import requests
 import time
+import json
 
 #Change the directory HERE for the input file
 #(!!! must be a tab-delimited text file without headers, and only has 5 fields: ID, origin X, origin Y, destination X, and destination Y)
@@ -7,11 +8,14 @@ inputfile = r"./test_input.txt"
 #Change the directory HERE for the output file
 outputfile = r"./output_file.txt"
 
+## Pull config
+with open('config.json') as f:
+   config = json.load(f)
+
+# Load the configuration from 'config.json' and access the API key
+api_key = config['g_api_key']
+
 gdm_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
-#API key from Google Maps API Premium
-#enter your API Key between the quotes on the line below
-api_key = ""
-#specifies the mode of transport to use when calculating directions. Valid values are: driving, walking, transit, or bicycling
 
 field1 = "ID"
 field2 = "origin_x"
