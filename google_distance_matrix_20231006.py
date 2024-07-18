@@ -1,10 +1,13 @@
-import sys, urllib, urllib2, json, base64, hashlib, hmac, time
+import urllib.parse
+import urllib.request
+import json
+import time
 
 #Change the directory HERE for the input file
 #(!!! must be a tab-delimited text file without headers, and only has 5 fields: ID, origin X, origin Y, destination X, and destination Y)
-inputfile = r"C:\Temp\input_file.txt"
+inputfile = r"./test_input.txt"
 #Change the directory HERE for the output file
-outputfile = r"C:\Temp\output_file.txt"
+outputfile = r"./output_file.txt"
 #sample input syntax that works
 #https://maps.googleapis.com/maps/api/distancematrix/json?origins=-27.149887%2C-51.746696&destinations=-27.131781%2C-51.464321&key=AIzaSyBlCbsavDJZc61KcTGAgw3tzBhNdlzWm4o 
 
@@ -36,12 +39,13 @@ for line in f_in_line:
    origin = "%s,%s" % (fields[1], fields[2])
    destination = "%s,%s" % (fields[3], fields[4])
    #Generate valid signature
-   encodedParams = urllib.urlencode({"origins":origin,"destinations":destination,"mode":mode,"sensor":"false","key":Key});
+   encodedParams = urllib.parse.urlencode({"origins":origin,"destinations":destination,"mode":mode,"sensor":"false","key":Key});
    #encodedParams = urllib.urlencode("origins=%s&destinations=%s&mode=%s&client=%s") % (origin, destination, mode, client)
    #decode the private key into its binary format
    url = google_url + distance_endpoint + encodedParams
-   result = urllib.urlopen(url)
+   result = urllib.request.urlopen(url)
    result_json = json.loads(result.read())
+   print(result_json)
    check_status = result_json["rows"][0]["elements"][0]["status"]
    print ("Processing ID: " + fields[0])
    try:
