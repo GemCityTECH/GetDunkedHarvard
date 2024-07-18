@@ -11,12 +11,17 @@ outputfile = r"./output_file.txt"
 #sample input syntax that works
 #https://maps.googleapis.com/maps/api/distancematrix/json?origins=-27.149887%2C-51.746696&destinations=-27.131781%2C-51.464321&key=AIzaSyBlCbsavDJZc61KcTGAgw3tzBhNdlzWm4o 
 
+## Pull config
+with open('config.json') as f:
+   config = json.load(f)
+
+# Load the configuration from 'config.json' and access the API key
+api_key = config['g_api_key']
 
 google_url = "https://maps.googleapis.com"
 distance_endpoint = "/maps/api/distancematrix/json?"
 #API key from Google Maps API Premium
 #enter your API Key between the quotes on the line below
-Key = ""
 #specifies the mode of transport to use when calculating directions. Valid values are: driving, walking, transit, or bicycling
 mode = "driving"
 
